@@ -7,12 +7,14 @@
 
 import LoginModal from "@/app/components/modal/LoginModal";
 import RegisterModal from "@/app/components/modal/RegisterModal";
+import RentModal from "../components/modal/RentModal";
 
 const modalProvider = () => {
   return (
     <>
       <LoginModal />
       <RegisterModal />
+      <RentModal/>
       {/*<SearchModal />*/}
       {/*<RentModal />*/}
     </>

@@ -99,13 +99,13 @@ const LoginModal = () => {
       />
       <div
         className='
-      text-neutral-500 text-center mt-4 font-light'>
+      text-blue-500 text-center mt-4 font-light'>
         <p>
           First time using Travella?
           <span
             onClick={onToggle}
             className='
-              text-neutral-800
+              text-blue-800
               cursor-pointer 
               hover:underline
             '>
