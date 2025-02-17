@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 
 const categories = [
   "Beach",
@@ -19,14 +20,13 @@ const categories = [
 ];
 
 const listings = [
-  { id: 1, name: "aa", category: "Islands", img: "image1.jpg" },
-  { id: 2, name: "fc", category: "Beach", img: "image2.jpg" },
-  { id: 3, name: "dcd", category: "Beach", img: "image3.jpg" },
-  // Tambahkan lebih banyak data sesuai kebutuhan
+  { id: 1, name: "aa", category: "Islands", img: "/image1.jpg" },
+  { id: 2, name: "fc", category: "Beach", img: "/image2.jpg" },
+  { id: 3, name: "dcd", category: "Beach", img: "/image3.jpg" },
 ];
 
 export default function FilteredList() {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filteredListings = selectedCategory
     ? listings.filter((listing) => listing.category === selectedCategory)
@@ -56,7 +56,7 @@ export default function FilteredList() {
       <div className="grid grid-cols-3 gap-4">
         {filteredListings.map((item) => (
           <div key={item.id} className="bg-white shadow-lg rounded p-3">
-            <img src={item.img} alt={item.name} className="w-full h-40 object-cover rounded" />
+            <Image src={item.img} alt={item.name} width={300} height={200} className="w-full h-40 object-cover rounded" />
             <h3 className="mt-2 font-semibold">{item.name}</h3>
           </div>
         ))}

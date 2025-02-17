@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -20,9 +20,9 @@ type Listing = {
   size?: number;
 };
 
-const ListingDetail = () => {
+const ListingContent = () => {
   const searchParams = useSearchParams();
-  const listingId = searchParams.get("id"); // Ambil ID dari URL
+  const listingId = searchParams?.get("id") ?? ""; // ✅ Pastikan tidak null
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [listing, setListing] = useState<Listing | null>(null);
@@ -30,7 +30,7 @@ const ListingDetail = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await axios.get<Listing[]>("/api/upload"); // Ambil semua listing dari API
+        const response = await axios.get<Listing[]>("/api/upload");
         setListings(response.data);
       } catch (error) {
         console.error("Failed to fetch listings:", error);
@@ -43,9 +43,9 @@ const ListingDetail = () => {
   }, []);
 
   useEffect(() => {
-    if (listings.length > 0) {
-      const foundListing = listings.find((item) => item.id === listingId);
-      setListing(foundListing || null);
+    if (listingId && listings.length > 0) {
+      const foundListing = listings.find((item) => item.id === listingId) ?? null;
+      setListing(foundListing);
     }
   }, [listings, listingId]);
 
@@ -54,7 +54,6 @@ const ListingDetail = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center bg-gray-100">
-      {/* Foto di Paling Atas */}
       <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
         <motion.img 
           src={listing.imageSrc} 
@@ -66,7 +65,6 @@ const ListingDetail = () => {
         />
       </div>
 
-      {/* Detail Listing */}
       <div className="max-w-3xl bg-white shadow-lg rounded-lg p-6 mt-6">
         <h2 className="text-3xl font-bold text-gray-800 text-center">{listing.title}</h2>
         <p className="text-lg text-gray-600 mt-2 text-center">{listing.description}</p>
@@ -76,7 +74,6 @@ const ListingDetail = () => {
         <p className="text-md text-gray-700 text-center mt-1"><strong>Guests:</strong> {listing.guestCount}</p>
         <p className="text-md text-gray-700 text-center mt-1"><strong>Location:</strong> {listing.locationValue}</p>
 
-        {/* Tombol Reservasi */}
         <div className="flex justify-center mt-6">
           <motion.button
             className="bg-green-600 text-white px-6 py-3 rounded-md shadow-md hover:bg-green-700"
@@ -89,6 +86,14 @@ const ListingDetail = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const ListingDetail = () => {
+  return (
+    <Suspense fallback={<p className="text-center text-gray-600">Loading...</p>}>
+      <ListingContent />
+    </Suspense>
   );
 };
 
